@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('enrollments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('course_id')->constrained()->cascadeOnDelete();
+            $table->string('stripe_payment_id')->nullable();
+            $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
+            $table->timestamp('enrolled_at')->nullable();
             $table->timestamps();
+
+            $table->unique(['student_id', 'course_id']); 
         });
     }
 
