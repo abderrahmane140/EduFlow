@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role'
     ];
 
     /**
@@ -45,5 +46,62 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [
+            'role' => $this->role,
+        ];
+    }
+
+    // ─── Role helpers ────────────────────────────────────────
+    public function isTeacher(): bool
+    {
+        return $this->role === 'teacher';
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
+
+    // ─── Relationships ───────────────────────────────────────
+    public function interests()
+    {
+        return $this->belongsToMany(Interest::class, 'user_interests');
+    }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'teacher_id');
+    }
+
+    public function saveCourses()
+    {
+        return $this->belongsToMany(Course::class, 'saved_courses', 'student_id', 'course_id')
+        ->withTimestamps();
+    }
+
+    public function enrollements()
+    {
+        return $this->hasMany(Enrollment::class, 'student_id');
+    }
+
+    public function enrolledCourses()
+    {
+        return $this->belongsToMany(Course::class, 'enrollments', 'student_id', 'course_id')
+                    ->withPivot('status', 'stripe_payment_id', 'enrolled_at');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'group_student', 'student_id', 'group_id')
+                    ->withTimestamps();
     }
 }
