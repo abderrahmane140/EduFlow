@@ -1,4 +1,5 @@
 <?php
+// app/Repositories/UserRepository.php
 
 namespace App\Repositories;
 
@@ -19,7 +20,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
 
     public function attachInterests(int $userId, array $interestIds): void
     {
-        $user = $this->findByEmail($userId);
-        $user->intersts()->sync($interestIds);
+        $user = $this->findById($userId);
+        $user->interests()->sync($interestIds);
     }
 }
