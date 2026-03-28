@@ -52,7 +52,7 @@ public function register(array $data): array
 
         $user = auth('api')->user();
 
-        return $this->responseWithToken($user, $token);
+        return $this->respondWithToken($user, $token);
     }
 
     public function logout()
