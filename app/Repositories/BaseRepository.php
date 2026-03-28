@@ -1,13 +1,19 @@
 <?php
+// app/Repositories/BaseRepository.php
 
 namespace App\Repositories;
 
 use App\Repositories\Interfaces\RepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 
-class BaseRepository implements RepositoryInterface
+class BaseRepository implements RepositoryInterface  // ← BaseRepository not UserRepository
 {
     protected Model $model;
+
+    public function __construct(Model $model)
+    {
+        $this->model = $model;  
+    }
 
     public function all()
     {
@@ -31,7 +37,7 @@ class BaseRepository implements RepositoryInterface
         return $record;
     }
 
-    public function delete(int $id)
+    public function delete(int $id): bool
     {
         $record = $this->findById($id);
         return $record->delete();
