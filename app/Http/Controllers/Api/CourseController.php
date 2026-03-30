@@ -14,6 +14,7 @@ class CourseController extends Controller
         private CourseService $courseService
     ) {}
 
+    
     // GET /api/courses
     public function index(Request $request): JsonResponse
     {
